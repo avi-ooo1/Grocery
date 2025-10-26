@@ -60,6 +60,10 @@ export const AppContextProvider = ({ children }) => {
 
   //Add Prduct to cart
   const addToCart = async (itemId) => {
+    if (!user) {
+      setShowUserLogin(true);
+      return;
+    }
     let cartData = structuredClone(cartItems);
     if (cartData[itemId]) {
       cartData[itemId] += 1;
