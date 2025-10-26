@@ -1,21 +1,22 @@
 import React, { useEffect } from 'react'
-import {useAppContext} from '../context/AppContext'
+import { useAppContext } from '../context/AppContext'
 import { useLocation } from 'react-router-dom';
 
 const Loading = () => {
 
-    const {navigate} = useAppContext();
-    let {search} = useLocation()
-    const query = new URLSearchParams(search);
-    const nextUrl = query.get('next');
+  const { navigate, fetchUser } = useAppContext();
+  let { search } = useLocation()
+  const query = new URLSearchParams(search);
+  const nextUrl = query.get('next');
 
-    useEffect(()=>{
-        if (nextUrl) {
-           setTimeout(()=>{
-            navigate(`/${nextUrl}`)
-           },5000) 
-        }
-    },[nextUrl])
+  useEffect(() => {
+    if (nextUrl) {
+      setTimeout(async () => {
+        await fetchUser(); // Refresh user data including cart
+        navigate(`/${nextUrl}`)
+      }, 5000)
+    }
+  }, [nextUrl])
 
 
   return (
