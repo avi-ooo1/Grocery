@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useAppContext } from '../context/AppContext';
-import { assets } from "../assets/assets";
+import { assets, dummyProducts } from "../assets/assets";
 import toast from "react-hot-toast";
 
 const Cart = () => {
@@ -14,11 +14,14 @@ const Cart = () => {
     const [paymentOption, setPaymentOption] = useState('COD');
 
     const getCart = () => {
+        const allProducts = [...products, ...dummyProducts];
         let tempArray = []
         for (const key in cartItems) {
-            const product = products.find((item) => item._id === key)
-            product.quantity = cartItems[key];
-            tempArray.push(product)
+            const product = allProducts.find((item) => item._id === key)
+            if (product) {
+                product.quantity = cartItems[key];
+                tempArray.push(product)
+            }
         }
         setCartArray(tempArray)
     }
@@ -76,8 +79,9 @@ const Cart = () => {
         }
     }
 
+
     useEffect(() => {
-        if (products.length > 0 && cartItems) {
+        if ((products.length > 0 || dummyProducts.length > 0) && cartItems) {
             getCart();
         }
     }, [products, cartItems])
@@ -92,7 +96,7 @@ const Cart = () => {
 
 
 
-    return products.length > 0 && cartItems ? (
+    return (products.length > 0 || dummyProducts.length > 0) && cartItems ? (
         <div className="flex flex-col md:flex-row mt-16">
             <div className='flex-1 max-w-4xl'>
                 <h1 className="text-3xl font-medium mb-6">

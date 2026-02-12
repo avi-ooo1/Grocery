@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { dummyProducts } from '../assets/assets';
+import { dummyProducts } from '../assets/assets';
 import toast from 'react-hot-toast';
 import axios from '../utils/axios';
 
@@ -107,9 +107,10 @@ export const AppContextProvider = ({ children }) => {
   //get cart total amount
   const getCartAmount = () => {
     let totalAmount = 0;
+    const allProducts = [...products, ...dummyProducts];
     for (const items in cartItems) {
-      let itemInfo = products.find((product) => product._id === items);
-      if (cartItems[items] > 0) {
+      let itemInfo = allProducts.find((product) => product._id === items);
+      if (cartItems[items] > 0 && itemInfo) {
         totalAmount += itemInfo.offerPrice * cartItems[items];
       }
     }
