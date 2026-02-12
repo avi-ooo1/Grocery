@@ -780,6 +780,51 @@ export const dummyProducts = [
     updatedAt: "2025-03-25T07:18:13.103Z",
     inStock: true,
   },
+  {
+    _id: "new_veg_001",
+    name: "Fresh Potato 1kg",
+    category: "Vegetables",
+    price: 40,
+    offerPrice: 30,
+    image: [potato_image_1],
+    description: [
+      "Farm fresh potatoes",
+      "Great for cooking",
+    ],
+    createdAt: "2025-03-25T07:17:46.018Z",
+    updatedAt: "2025-03-25T07:18:13.103Z",
+    inStock: true,
+  },
+  {
+    _id: "new_fruit_001",
+    name: "Green Apple 1kg",
+    category: "Fruits",
+    price: 180,
+    offerPrice: 160,
+    image: [apple_image],
+    description: [
+      "Crunchy and sweet",
+      "Rich in fiber",
+    ],
+    createdAt: "2025-03-25T07:17:46.018Z",
+    updatedAt: "2025-03-25T07:18:13.103Z",
+    inStock: true,
+  },
+  {
+    _id: "new_dairy_001",
+    name: "Cow Milk 500ml",
+    category: "Dairy",
+    price: 35,
+    offerPrice: 30,
+    image: [amul_milk_image],
+    description: [
+      "Fresh cow milk",
+      "Rich in calcium",
+    ],
+    createdAt: "2025-03-25T07:17:46.018Z",
+    updatedAt: "2025-03-25T07:18:13.103Z",
+    inStock: true,
+  },
 ];
 
 export const dummyAddress = [

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import ProductCard from '../components/ProductCard'
-
+import { dummyProducts } from '../assets/assets'
 
 const AllProducts = () => {
 
@@ -9,10 +9,11 @@ const AllProducts = () => {
   const [filteredProducts, setFilterProducts] = useState([]);
 
   useEffect(() => {
+    const allProducts = [...products, ...dummyProducts];
     if (searchQuery.length > 0) {
-      setFilterProducts(products.filter(product => product.name.toLowerCase().includes(searchQuery.toLowerCase())))
+      setFilterProducts(allProducts.filter(product => product.name.toLowerCase().includes(searchQuery.toLowerCase())))
     } else {
-      setFilterProducts(products);
+      setFilterProducts(allProducts);
     }
   }, [products, searchQuery])
 
