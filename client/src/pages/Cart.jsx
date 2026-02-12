@@ -54,9 +54,19 @@ const Cart = () => {
 
             // If no valid backend items (only dummy products), simulate success
             if (itemsToSend.length === 0) {
-                toast.success("Order Placed Successfully");
-                setCartItems({});
-                navigate('/my-orders');
+                if (paymentOption === 'Online') {
+                    toast.loading("Redirecting to payment gateway...");
+                    setTimeout(() => {
+                        toast.dismiss();
+                        toast.success("Payment Successful (Demo Mode)");
+                        setCartItems({});
+                        navigate('/my-orders');
+                    }, 2500);
+                } else {
+                    toast.success("Order Placed Successfully");
+                    setCartItems({});
+                    navigate('/my-orders');
+                }
                 return;
             }
 
