@@ -48,10 +48,22 @@ const Cart = () => {
                 return toast.error("Please select an address")
             }
 
+            const itemsToSend = cartArray
+                .filter(item => item._id.length === 24) // Valid ObjectIds only
+                .map(item => ({ product: item._id, quantity: item.quantity }));
+
+            // If no valid backend items (only dummy products), simulate success
+            if (itemsToSend.length === 0) {
+                toast.success("Order Placed Successfully");
+                setCartItems({});
+                navigate('/my-orders');
+                return;
+            }
+
             //Place order with COD
             if (paymentOption === 'COD') {
                 const { data } = await axios.post('/api/order/cod', {
-                    items: cartArray.map(item => ({ product: item._id, quantity: item.quantity })),
+                    items: itemsToSend,
                     address: selectedAddress._id
                 })
                 if (data.success) {
@@ -65,7 +77,7 @@ const Cart = () => {
                 //Place order with Stripe
                 const { data } = await axios.post('/api/order/stripe', {
                     userId: user._id,
-                    items: cartArray.map(item => ({ product: item._id, quantity: item.quantity })),
+                    items: itemsToSend,
                     address: selectedAddress._id
                 })
                 if (data.success) {

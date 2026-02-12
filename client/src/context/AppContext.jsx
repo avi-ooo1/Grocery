@@ -124,10 +124,18 @@ export const AppContextProvider = ({ children }) => {
   }, [])
 
   //Update Database Cart items
+  //Update Database Cart items
   useEffect(() => {
     const updateCart = async () => {
       try {
-        const { data } = await axios.post('/api/cart/update', { userId: user._id, cartItems });
+        const cartDataToSend = {};
+        for (const key in cartItems) {
+            // Filter out dummy products (assuming valid ObjectIds are 24 chars)
+            if (key.length === 24) {
+                cartDataToSend[key] = cartItems[key];
+            }
+        }
+        const { data } = await axios.post('/api/cart/update', { userId: user._id, cartItems: cartDataToSend });
         if (!data.success) {
           toast.error(data.message)
         }
