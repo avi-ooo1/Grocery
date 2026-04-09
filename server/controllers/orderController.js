@@ -28,6 +28,10 @@ export const placeOrderCOD = async (req, res) => {
             address,
             paymentType: 'COD'
         }));
+
+        // Clear cart for COD orders
+        await User.findByIdAndUpdate(userId, { cartItems: {} });
+
         return res.json({ success: true, message: 'Order Placed Successfully' })
     } catch (error) {
         return res.json({ success: false, message: error.message });
@@ -39,7 +43,8 @@ export const placeOrderCOD = async (req, res) => {
 
 export const placeOrderStripe = async (req, res) => {
     try {
-        const { userId, items, address } = req.body;
+        const { items, address } = req.body;
+        const userId = req.userId;
         const { origin } = req.headers;
         if (!address || items.length == 0) {
             return res.json({ success: false, message: "Invalid Data" })
@@ -91,8 +96,8 @@ export const placeOrderStripe = async (req, res) => {
         const session = await stripeInstance.checkout.sessions.create({
             line_items,
             mode: "payment",
-            success_url: `${origin}/loader?next=my-orders`,
-            cancel_url: `${origin}/cart`,
+            success_url: `${origin}/loader?next=my-orders&orderId=${order._id.toString()}&success=true`,
+            cancel_url: `${origin}/loader?next=my-orders&orderId=${order._id.toString()}&success=false`,
             metadata: {
                 orderId: order._id.toString(),
                 userId,
@@ -120,7 +125,8 @@ export const stripeWebhooks = async (req, res) => {
             process.env.STRIPE_WEBHOOK_SECRET
         );
     } catch (error) {
-        res.status(400).send(`Webhook Error: ${error.message}`)
+        console.log("❌ Webhook Error:", error.message);
+        return res.status(400).send(`Webhook Error: ${error.message}`)
     }
 
     //handle the event
@@ -128,6 +134,8 @@ export const stripeWebhooks = async (req, res) => {
         case "checkout.session.completed": {
             const session = event.data.object;
             const { orderId, userId } = session.metadata;
+
+            console.log("✅ Payment Success for Order:", orderId);
 
             //Mark payment as Paid
             await Order.findByIdAndUpdate(orderId, { isPaid: true });
@@ -144,14 +152,30 @@ export const stripeWebhooks = async (req, res) => {
     res.json({ received: true });
 }
 
+
+// Verify Stripe Payment (Frontend Callback) : /api/order/verify-stripe
+export const verifyStripe = async (req, res) => {
+    try {
+        const { orderId, success } = req.body;
+        const userId = req.userId;
+
+        if (success === 'true') {
+            await Order.findByIdAndUpdate(orderId, { isPaid: true });
+            await User.findByIdAndUpdate(userId, { cartItems: {} });
+            return res.json({ success: true, message: "Payment Successful" });
+        } else {
+            return res.json({ success: false, message: "Payment Failed" });
+        }
+    } catch (error) {
+        return res.json({ success: false, message: error.message });
+    }
+}
+
 //Get Order By userID : /api/order/user
 export const getUserOrders = async (req, res) => {
     try {
         const userId = req.userId;
-        const orders = await Order.find({
-            userId,
-            $or: [{ paymentType: 'COD' }, { isPaid: true }]
-        }).populate("items.product address").sort({ createdAt: -1 });
+        const orders = await Order.find({ userId }).populate("items.product address").sort({ createdAt: -1 });
         res.json({ success: true, orders });
     } catch (error) {
         res.json({ success: false, message: error.message })
@@ -162,9 +186,7 @@ export const getUserOrders = async (req, res) => {
 //Get all order (for seller/admin) : /api/order/seller
 export const getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find({
-            $or: [{ paymentType: 'COD' }, { isPaid: true }]
-        }).populate("items.product address").sort({ createdAt: -1 });       //-1 is user for (last order show on the top)
+        const orders = await Order.find({}).populate("items.product address").sort({ createdAt: -1 });       //-1 is user for (last order show on the top)
         res.json({ success: true, orders });
     } catch (error) {
         res.json({ success: false, message: error.message })

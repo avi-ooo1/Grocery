@@ -4,19 +4,33 @@ import { useLocation } from 'react-router-dom';
 
 const Loading = () => {
 
-  const { navigate, fetchUser } = useAppContext();
+  const { navigate, fetchUser, axios } = useAppContext();
   let { search } = useLocation()
   const query = new URLSearchParams(search);
   const nextUrl = query.get('next');
+  const orderId = query.get('orderId');
+  const success = query.get('success');
+
+  const verifyPayment = async () => {
+    try {
+      await axios.post('/api/order/verify-stripe', { orderId, success });
+      await fetchUser();
+      navigate(`/${nextUrl}`)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-    if (nextUrl) {
+    if (orderId && success) {
+      verifyPayment()
+    } else if (nextUrl) {
       setTimeout(async () => {
         await fetchUser(); // Refresh user data including cart
         navigate(`/${nextUrl}`)
       }, 5000)
     }
-  }, [nextUrl])
+  }, [orderId, success, nextUrl])
 
 
   return (

@@ -54,20 +54,7 @@ const Cart = () => {
 
             // If no valid backend items (only dummy products), simulate success
             if (itemsToSend.length === 0) {
-                if (paymentOption === 'Online') {
-                    toast.loading("Redirecting to payment gateway...");
-                    setTimeout(() => {
-                        toast.dismiss();
-                        toast.success("Payment Successful (Demo Mode)");
-                        setCartItems({});
-                        navigate('/my-orders');
-                    }, 2500);
-                } else {
-                    toast.success("Order Placed Successfully");
-                    setCartItems({});
-                    navigate('/my-orders');
-                }
-                return;
+                return toast.error("Cart is empty");
             }
 
             //Place order with COD
@@ -92,6 +79,8 @@ const Cart = () => {
                 })
                 if (data.success) {
                     window.location.replace(data.url)
+                    toast.success(data.message)
+
                 } else {
                     toast.error(data.message)
                 }
@@ -197,6 +186,33 @@ const Cart = () => {
                         <option value="COD">Cash On Delivery</option>
                         <option value="Online">Online Payment</option>
                     </select>
+
+                    {paymentOption === 'Online' && (
+                        <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-2xl animate-fadeIn">
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                                <p className="text-[11px] text-gray-500 font-medium uppercase tracking-widest">Test Credentials</p>
+                            </div>
+                            
+                            <div className="space-y-3">
+                                <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                                    <p className="text-[10px] text-gray-400 font-medium uppercase mb-1">Card Number</p>
+                                    <p className="text-base font-mono font-medium text-gray-800 tracking-widest">4242 4242 4242 4242</p>
+                                </div>
+                                
+                                <div className="flex gap-3">
+                                    <div className="flex-1 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                                        <p className="text-[10px] text-gray-400 font-medium uppercase mb-1">Expiry</p>
+                                        <p className="text-sm font-medium text-gray-800">12/26</p>
+                                    </div>
+                                    <div className="flex-1 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                                        <p className="text-[10px] text-gray-400 font-medium uppercase mb-1">CVC</p>
+                                        <p className="text-sm font-medium text-gray-800">123</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <hr className="border-gray-300" />

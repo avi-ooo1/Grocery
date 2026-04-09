@@ -591,8 +591,11 @@ const dummyProducts = [
 
 const seedDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URL);
+        await mongoose.connect(`${process.env.MONGODB_URL}/grocery`);
         console.log("Connected to MongoDB");
+
+        await Product.deleteMany({});
+        console.log("Cleared existing products");
 
         for (const product of dummyProducts) {
             console.log(`Processing ${product.name}...`);
