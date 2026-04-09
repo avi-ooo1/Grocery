@@ -22,12 +22,7 @@ await connectCloudinary();
 //Allow multiple origins
 const allowedOrigins = ['http://localhost:5173', 'https://grocery-xi-five.vercel.app', 'https://grocery-frontend-khaki.vercel.app'];
 
-app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
-
-
-//Middleware congiguration
-app.use(express.json());
-app.use(cookieParser());
+//Middleware configuration
 app.use(cors({ 
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
@@ -38,6 +33,8 @@ app.use(cors({
     }, 
     credentials: true 
 }));
+app.use(express.json());
+app.use(cookieParser());
 
 // Debug middleware to log cookies
 app.use((req, res, next) => {
@@ -45,6 +42,8 @@ app.use((req, res, next) => {
     console.log("Cookies present:", Object.keys(req.cookies));
     next();
 });
+
+app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
 
 app.get('/', (req, res) => res.send("API is Working"));
 app.use('/api/user', userRouter);
