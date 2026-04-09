@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext';
 import { dummyOrders } from '../assets/assets';
+import toast from 'react-hot-toast';
 
 
 const MyOrders = () => {
@@ -14,8 +15,7 @@ const MyOrders = () => {
                 setMyOrders(data.orders)
             }
         } catch (error) {
-            console.log(error);
-
+            toast.error(error.message);
         }
     }
 

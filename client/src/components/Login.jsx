@@ -22,9 +22,10 @@ const Login = () => {
                 password
             });
             if (data.success) {
-                navigate('/');
                 setUser(data.user)
                 setShowUserLogin(false);
+                toast.success(state === "login" ? "Login Successful" : "Account Created Successfully");
+                navigate('/');
             }else{
                 toast.error(data.message)
             }
