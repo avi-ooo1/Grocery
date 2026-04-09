@@ -24,11 +24,11 @@ export const register = async (req,res) => {
         res.cookie('token',token,{
             httpOnly : true,  //Prevent the javaScript to access the cookie
             secure: process.env.NODE_ENV === 'production',   // use secure cookies in production 
-            sameSite: process.env.NODE_ENV === 'producttion' ? 'none' : 'strict', //CSRF protection
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', //CSRF protection
             maxAge : 7*24*60*60*1000,     // cookie expiration time => 7days in millisecond
         });
 
-        return res.json({success:true, user:{email:user.email, name:user.name}});
+        return res.json({success:true, user:{_id:user._id, email:user.email, name:user.name, cartItems:user.cartItems}});
 
     } catch (error) {
         console.log(error.message)  ;
@@ -57,11 +57,11 @@ export const login = async (req,res) =>{
         res.cookie('token',token,{
             httpOnly : true,  //Prevent the javaScript to access the cookie
             secure: process.env.NODE_ENV === 'production',   // use secure cookies in production 
-            sameSite: process.env.NODE_ENV === 'producttion' ? 'none' : 'strict', //CSRF protection
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', //CSRF protection
             maxAge : 7*24*60*60*1000,     // cookie expiration time => 7days in millisecond
         });
 
-        return res.json({success:true, user:{email:user.email, name:user.name}});
+        return res.json({success:true, user:{_id:user._id, email:user.email, name:user.name, cartItems:user.cartItems}});
     } catch (error) {
         console.log(error.message)  ;
         res.json({success:false, message:error.message});
