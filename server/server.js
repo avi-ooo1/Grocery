@@ -20,7 +20,7 @@ await connectDB();
 await connectCloudinary();
 
 //Allow multiple origins
-const allowedOrigins = ['http://localhost:5173', 'https://grocery-xi-five.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://grocery-xi-five.vercel.app', 'https://grocery-frontend-khaki.vercel.app'];
 
 app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
 
@@ -28,7 +28,7 @@ app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
 //Middleware congiguration
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.get('/', (req, res) => res.send("API is Working"));
 app.use('/api/user', userRouter);
