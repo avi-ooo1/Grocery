@@ -36,11 +36,11 @@ const App = () => {
   const { showUserLogin, isSeller } = useAppContext();
 
   return (
-    <div className='text-default min-h-screen text-gray-700 bg-white' >
+    <div className='text-default min-h-screen text-gray-700 bg-white overflow-x-hidden' >
       {isSellerPath ? null : <Navbar />}
       {showUserLogin ? <Login /> : null}
       <Toaster />
-      <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
+      <div className={`${isSellerPath ? "" : "px-4 md:px-16 lg:px-24 max-w-screen-2xl mx-auto"}`}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path='/' element={<Home />} />

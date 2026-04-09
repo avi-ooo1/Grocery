@@ -124,7 +124,7 @@ const Navbar = () => {
             <div className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setOpen(false)}></div>
             
             {/* Mobile Menu Drawer */}
-            <div className={`fixed top-0 right-0 h-full w-[300px] bg-white z-[70] shadow-2xl transition-transform duration-500 ease-out transform ${open ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div className={`fixed top-0 right-0 h-full w-[300px] bg-white z-[70] shadow-2xl transition-all duration-500 ease-out transform ${open ? 'translate-x-0' : 'translate-x-full invisible'}`}>
                 <div className='p-8 flex flex-col h-full'>
                     <div className='flex justify-between items-center mb-10'>
                         <img src={assets.logo} className='h-8' alt="logo" />
