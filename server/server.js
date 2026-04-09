@@ -16,6 +16,8 @@ import { stripeWebhooks } from './controllers/orderController.js';
 const app = express();
 const port = process.env.PORT || 4000;
 
+app.set('trust proxy', 1); // Trust Vercel proxy for secure cookies
+
 await connectDB();
 await connectCloudinary();
 
