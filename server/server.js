@@ -28,7 +28,7 @@ app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
 //Middleware congiguration
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 
 app.get('/', (req, res) => res.send("API is Working"));
 app.use('/api/user', userRouter);
